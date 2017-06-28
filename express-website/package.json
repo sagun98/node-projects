@@ -1,0 +1,17 @@
+{
+  "name": "express_website",
+  "version": "1.0.0",
+  "description": "A simple website on express",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "sagun maharjan",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3",
+    "jade": "^1.11.0",
+    "nodemailer": "^4.0.1"
+  }
+}
