@@ -1,0 +1,22 @@
+{
+  "name": "simpleserver",
+  "version": "1.0.0",
+  "description": "A very simple server",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sagun98/node-projects.git"
+  },
+  "author": "Sagun Maharjan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sagun98/node-projects/issues"
+  },
+  "homepage": "https://github.com/sagun98/node-projects#readme",
+  "dependencies": {
+    "node-dev": "^3.1.3"
+  }
+}
