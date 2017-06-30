@@ -20,3 +20,34 @@ Install mongo db for database
 ### Deleting
 #### db.users.remove({username:'mike'});
 
+
+# Starting the NodeAuth project
+Necessary modules:
+sudo npm -g install express
+sudo npm -g install express-generator
+
+Then run **express** in the folder to install necessary folders. 
+
+Dependencies needed to install:
+##### In the package.json
+body-parser
+cookie-parser
+debug
+express
+jade
+morgan
+serve-favicon
+
+##### Not in the package.json
+mongodb
+mongoose (ORM)
+connect-flash
+express-messages
+express-validator
+express-session
+passport
+passport-local
+passport-http
+multer
+
+
