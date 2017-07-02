@@ -1,9 +1,8 @@
 var express = require('express');
 var router = express.Router();
-var multer = require('multer');
 var passport = require('passport');
 var LocalStrategy = require ('passport-local').Strategy;
-
+var multer = require('multer');
 var upload = multer({dest:'./uploads'}); 
 
 var User = require ('../model/users');
@@ -63,6 +62,7 @@ passport.use(new LocalStrategy(function(username,password,done){
 
 //POST route for register
 router.post('/register',upload.single('profileimage'), function(req, res, next) { 
+	//Putting values to their own name
 	var name = req.body.name;
 	var email = req.body.email;
 	var username = req.body.username;

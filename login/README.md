@@ -84,7 +84,7 @@ Set the layout.jade page with header and block content
 
 #### Route for login and register  
 =>users.js in routes  
-
+```bash
 router.get('/register', function(req, res, next) {  
   res.render('register',{title:'Register'});  
 });  
@@ -92,5 +92,35 @@ router.get('/register', function(req, res, next) {
 router.get('/login', function(req, res, next) {  
   res.render('login',{title:'Login'});  
 });  
-
+```
 #### Complete the views of login and register using jade which extends layout
+  
+  
+### REGISTER FORM AND VALIDATION (routes/users.js)
+Need a post request to register so:  
+But need to require multer to handle uploads
+```bash
+	var multer = require('multer');  
+	var upload = multer({dest:'./uploads'}); 
+```
+
+Then for setting the file and post variable to respective names  
+```bash
+//POST route for register
+router.post('/register',upload.single('profileimage'), function(req, res, next) {  
+	//Putting values to their own name  
+	var name = req.body.name;  
+	var email = req.body.email;  
+	var username = req.body.username;  
+	var password = req.body.password;  
+	var password2 = req.body.password2;  
+
+	if (req.file){  
+		console.log ('Uploading file');  
+		var profileimage = req.file.filename;  
+	}  
+	else {  
+		console.log ('No file uploaded...');  
+		var profileimage = 'noimage.jpg';  
+	}  
+```
