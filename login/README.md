@@ -54,7 +54,7 @@ passport-http
 multer   (helps in file upload)
 bcryptjs  
 
-#### Middleware setup
+### Middleware setup
 
 ##### MULTER:
 var multer = require('multer');  
@@ -78,7 +78,7 @@ Search github for middleware of express-validator and copy paste
 Search github for middleware of express-messages and copy paste
   
 
-### Views and Layouts  
+## Views and Layouts  
 Include bootstrap css and js  
 Set the layout.jade page with header and block content  
 
@@ -142,7 +142,7 @@ router.post('/register',upload.single('profileimage'), function(req, res, next) 
 			errors: errors  
 		});  
 	}  
-	// Else create an object of new User
+	// Else create an object of new User(the User model will the exported below)
 	else {  
 		var newUser = new User({  
 			name: name,  
@@ -175,7 +175,7 @@ If there are no errors then need to spit out the flash message
 Create a folder model/users.js
 ```bash
 var mongoose = require ('mongoose');
-mongoose.connect('mongodb://localhost/nodeauth');
+mongoose.connect('mongodb://localhost/___dbname(nodeauth)___');
 var db = mongoose.connection;
 var UserSchema = mongoose.Schema({
 	username:{
@@ -194,5 +194,113 @@ var UserSchema = mongoose.Schema({
 	profileimage:{
 		type:String
 	} 
-});  
+});
+
+var User = module.exports = mongoose.model('User',UserSchema);  
+
+module.exports.createUser = function(newUser,callback){
+	newUser.save(callback);
+}
+```  
+Then require this user model in routes(routes/users.js) as:  
+```bash
+	var User = require("../models/user");
+```  
+  
+Below in the same file:
+```bash
+//Mainly focus on the else block because if block in done above
+if (errors){
+	res.render('register',{
+	errors: errors
+	});
+}
+else {
+//Creates a new user to the DB
+	var newUser = new User({
+		name: name,
+		email:email,
+		username:username,
+		password:password,
+		profileimage:profileimage
+	});
+
+	User.createUser(newUser,function(err,user){
+		if (err) throw err;
+		console.log(user);
+	});
+```
+
+After data goes to db, need to display a success flash message:  
+```bash
+req.flash('success','You are now registered and now can Login');
+res.location('/');
+res.redirect('/');
+```  
+After success flash message is created in the routes, we need to add 'success' class in the views too(layout.jade) !!
+```bash
+	// At the end of the layout.jade (Add !=messages())
+	.container
+		!=messages()
+		block content
+
+		script (src = 'http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
+		script(src='javascript/bootstrap.js')
+```
+
+So all in all, the whole code for POST route of register becomes: 
+```bash
+//POST route for register
+router.post('/register',upload.single('profileimage'), function(req, res, next) { 
+	//Putting values to their own name
+	var name = req.body.name;
+	var email = req.body.email;
+	var username = req.body.username;
+	var password = req.body.password;
+	var password2 = req.body.password2;
+
+	if (req.file){
+		console.log ('Uploading file');
+		var profileimage = req.file.filename;
+	}
+	else {
+		console.log ('No file uploaded...');
+		var profileimage = 'noimage.jpg';
+	}
+
+	//Form Validator
+	req.checkBody('name','Name field is required').notEmpty();
+	req.checkBody('email','Email field is required').notEmpty();
+	req.checkBody('email','Email is not valid').isEmail();
+	req.checkBody('username','Username field is required').notEmpty();
+	req.checkBody('password','Password field is required').notEmpty();
+	req.checkBody('password2','Passwords donot match').equals(req.body.password);
+
+	// Check Errors
+	var errors = req.validationErrors();
+	if (errors){
+		res.render('register',{
+			errors: errors
+		});
+	}
+	else {
+		var newUser = new User({
+			name: name,
+			email:email,
+			username:username,
+			password:password,
+			profileimage:profileimage
+		});
+
+		User.createUser(newUser,function(err,user){
+			if (err) throw err;
+			console.log(user);
+		});
+
+		req.flash('success','You are now registered and now can Login');
+
+		res.location('/');
+		res.redirect('/');
+	}
+});
 ```
