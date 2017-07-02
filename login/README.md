@@ -51,8 +51,30 @@ express-session
 passport     (http://passportjs.org/docs/authenticate) 
 passport-local  
 passport-http  
-multer  
-bcryptjs
+multer   (helps in file upload)
+bcryptjs  
 
+#### Middleware setup
 
+##### MULTER:  
+var multer = require('multer');
+var upload = multer({dest:'./uploads'});  
+  
+##### PASSPORT:
+app.use(session({
+	secret:'secret',
+	saveUninitialized: true,
+	resave: true
+}));
+
+##### PASSPORT:  
+app.use (passport.initialize());
+app.use(passport.session());  
+
+##### Validator:
+Search github for middleware of express-validator and copy paste  
+  
+##### EXPRESS MESSAGES:  
+Search github for middleware of express-messages and copy paste
+  
 
