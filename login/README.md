@@ -30,24 +30,27 @@ Then run **express** in the folder to install necessary folders.
 
 Dependencies needed to install:
 ##### In the package.json
-body-parser
-cookie-parser
-debug
-express
-jade
-morgan
-serve-favicon
+body-parser  
+cookie-parser  
+debug  
+express  
+jade  
+morgan  
+serve-favicon  
+
 
 ##### Not in the package.json
-mongodb
-mongoose (ORM)
-connect-flash
-express-messages
-express-validator
-express-session
-passport
-passport-local
-passport-http
-multer
+mongodb  
+mongoose (ORM)  
+connect-flash  
+express-messages  
+express-validator  
+express-session  
+passport     (http://passportjs.org/docs/authenticate) 
+passport-local  
+passport-http  
+multer  
+bcryptjs
+
 
 
