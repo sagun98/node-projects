@@ -123,4 +123,48 @@ router.post('/register',upload.single('profileimage'), function(req, res, next) 
 		console.log ('No file uploaded...');  
 		var profileimage = 'noimage.jpg';  
 	}  
+```  
+
+### VALIDATION:  
+```bash
+	//Form Validator  
+	req.checkBody('name','Name field is required').notEmpty();  
+	req.checkBody('email','Email field is required').notEmpty();  
+	req.checkBody('email','Email is not valid').isEmail();  
+	req.checkBody('username','Username field is required').notEmpty();  
+	req.checkBody('password','Password field is required').notEmpty();  
+	req.checkBody('password2','Passwords donot match').equals(req.body.password);  
+
+	// Check Errors  
+	var errors = req.validationErrors();  
+	if (errors){  
+		res.render('register',{  
+			errors: errors  
+		});  
+	}  
+	// Else create an object of new User
+	else {  
+		var newUser = new User({  
+			name: name,  
+			email:email,  
+			username:username,  
+			password:password,  
+			profileimage:profileimage  
+		});  
+```  
+
+If there is any error and we need to spit out the error in the views,
+<under p tag of register.jade>  
+```bash
+ul.errors
+	if errors
+		each error, i in errors
+			div.alert.alert-danger #{error.msg}
+```  
+  
+If there are no errors then need to spit out the flash message  
+```bash
+	req.flash('success','You are now registered and now can Login');
+	res.location('/');
+	res.redirect('/');
 ```
