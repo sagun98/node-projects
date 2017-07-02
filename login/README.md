@@ -60,14 +60,14 @@ bcryptjs
 var multer = require('multer');  
 var upload = multer({dest:'./uploads'});  
   
-##### PASSPORT:
+##### EXPRESS-SESSIONS:
 app.use(session({  
 	secret:'secret',  
 	saveUninitialized: true,  
 	resave: true  
 }));
 
-##### EXPRESS-SESSIONS:  
+##### PASSPORT:  
 app.use (passport.initialize());  
 app.use(passport.session());  
 
