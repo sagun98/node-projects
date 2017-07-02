@@ -247,6 +247,28 @@ After success flash message is created in the routes, we need to add 'success' c
 		script (src = 'http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
 		script(src='javascript/bootstrap.js')
 ```
+  
+Maybe add some CSS to the stylesheet/style.css
+```bash
+ul.success li {
+	padding:15px;
+	margin-bottom:20px;
+	border : 1px solid transparent;
+	color: #3c763d;
+	background-color:#d6e9c6;
+	list-style: none;
+}
+
+ul.error li {
+	padding : 15px;
+	margin-bottom: 20px;
+	border:1px solid transparent;
+	border-radius: 4px;
+	background-color: #f2dede; 
+	border-color: #ebccd1;
+	list-style: none;
+}
+```
 
 So all in all, the whole code for POST route of register becomes: 
 ```bash
@@ -304,3 +326,158 @@ router.post('/register',upload.single('profileimage'), function(req, res, next) 
 	}
 });
 ```
+  
+  
+## PASSWORD HASHING WITH BCRYPT
+
+In app.js 
+```bash
+var bcrypt = require(bcrypt)
+```
+
+Now in model/users.js
+```bash
+//Update createUser to the following with password hashing
+module.exports.createUser = function(newUser,callback){
+	bcrypt.genSalt(10, function(err, salt) {
+    bcrypt.hash(newUser.password, salt, function(err, hash) {
+       newUser.password = hash;
+       newUser.save(callback);
+    });
+});
+}
+```  
+  
+  
+  
+## PASSPORT LOGIN AND AUTHENTICATION  
+  
+Configure the POST route for the login(routes/users.js)
+
+```bash
+router.post('/login',
+  passport.authenticate('local',{failureRedirect:'/users/login',failureFlash:'Invalid username or password'}),
+  function(req, res) {
+    req.flash('success','You are now logged in!!');
+    res.redirect('/');
+  });
+```
+  
+Since we are using local strategy, we need to authenticate the username and the password to the DB and also serialize,deserialize it, 
+
+First, we gonna include:
+```bash
+var passport = require('passport');
+var LocalStrategy = require ('passport-local').Strategy;
+```
+
+Then,
+```bash
+// Authentication to the username and the password
+passport.use(new LocalStrategy(function(username,password,done){
+// Will create getUserByUsername function in model
+	User.getUserByUsername(username,function(err,user){
+		if(err) throw err;
+		if(!user){
+			return done(null,false,{message:'Unknown User'});
+		}
+// Will create comparePassword function in model
+		User.comparePassword(password,user.password,function(err,isMatch){
+			if (err) return done(err);
+			if (isMatch){
+				return done (null,user);
+			}
+			else {
+				return done (null,false,{message:'Invalid Password'});
+			}
+		});
+	})
+}));
+``` 
+
+Serialize and deserialize the authentication
+```bash
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+// Will create the getUserByID function in the model
+  User.getUserById(id, function(err, user) {
+    done(err, user);
+  });
+});
+```
+
+Now for the functions like getUserByID,getUserByUsername,comparePassword in model/users.js
+```bash
+module.exports.getUserById = function(id,callback){
+	User.findById(id,callback);
+}
+
+module.exports.getUserByUsername = function(username,callback){
+	var query = {username: username};
+	User.findOne(query,callback);
+}
+
+module.exports.comparePassword = function(candidatePassword,hash,callback){
+	bcrypt.compare(candidatePassword, hash, function(err, isMatch) {
+		callback(null,isMatch);
+	});
+}
+``` 
+  
+  
+  
+## LOGOUT AND ACCESS CONTROL
+In (routes/users/js)  
+GET Routes for logout:
+```bash
+router.get ('/logout',function(req,res){
+	req.logout();
+	req.flash('success','You are now logged out');
+	res.redirect('/users/login');
+});
+```
+In the routes/index.js, add the ensureAuthenticated function:
+```bash
+router.get('/', ensureAuthenticated, function(req, res, next) {
+  res.render('index', { title: 'Members' });
+});
+
+
+function ensureAuthenticated(req,res,next){
+	if (req.isAuthenticated()){
+		return next();
+	}
+	res.redirect('/users/login');
+}
+```
+
+When you are logged in, you do not want to show register and when you are logged out, you donot want to show memebers and logout,  
+So for that, you need to have a global variable to check if logged in or logged out
+  
+In app.js, creating a global variable. 
+```bash
+app.get('*',function(req,res,next){
+  res.locals.user=req.user || null;
+  next();
+});
+```
+  
+Then in layout.jade, check if user or not:  
+```bash
+ul.nav.navbar-nav
+	if user
+		li(class=(title=='Members'?'active':''))
+			a(href='/') Members
+	if !user
+		li(class=(title=='Register'?'active':''))
+			a(href='/users/register') Register
+		li(class=(title=='Login'?'active':''))
+			a(href='/users/login') Login
+ul.nav.navbar-nav.navbar-right
+	if user
+		li
+			a(href='/users/logout') Logout
+
