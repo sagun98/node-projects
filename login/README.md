@@ -23,8 +23,10 @@ Install mongo db for database
 
 # Starting the NodeAuth project
 Necessary modules:
-sudo npm -g install express
+sudo npm -g install express  
 sudo npm -g install express-generator
+Go to the project folder and run 'express'
+Check and add all the dependencies
 
 Then run **express** in the folder to install necessary folders. 
 
