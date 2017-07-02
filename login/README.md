@@ -78,3 +78,19 @@ Search github for middleware of express-validator and copy paste
 Search github for middleware of express-messages and copy paste
   
 
+### Views and Layouts  
+Include bootstrap css and js  
+Set the layout.jade page with header and block content  
+
+#### Route for login and register  
+=>users.js in routes  
+
+router.get('/register', function(req, res, next) {  
+  res.render('register',{title:'Register'});  
+});  
+  
+router.get('/login', function(req, res, next) {  
+  res.render('login',{title:'Login'});  
+});  
+
+#### Complete the views of login and register using jade which extends layout
