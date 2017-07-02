@@ -56,19 +56,19 @@ bcryptjs
 
 #### Middleware setup
 
-##### MULTER:  
-var multer = require('multer');
+##### MULTER:
+var multer = require('multer');  
 var upload = multer({dest:'./uploads'});  
   
 ##### PASSPORT:
-app.use(session({
-	secret:'secret',
-	saveUninitialized: true,
-	resave: true
+app.use(session({  
+	secret:'secret',  
+	saveUninitialized: true,  
+	resave: true  
 }));
 
-##### PASSPORT:  
-app.use (passport.initialize());
+##### EXPRESS-SESSIONS:  
+app.use (passport.initialize());  
 app.use(passport.session());  
 
 ##### Validator:
