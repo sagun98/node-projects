@@ -75,25 +75,57 @@ var db = mongoose.connection;
 ### Middleware setup
 
 ##### MULTER:
+```bash
 var multer = require('multer');  
 var upload = multer({dest:'./uploads'});  
-  
+```  
+
 ##### EXPRESS-SESSIONS:
+```bash
 app.use(session({  
 	secret:'secret',  
 	saveUninitialized: true,  
 	resave: true  
 }));
+```
 
-##### PASSPORT:  
+##### PASSPORT:
+```bash  
 app.use (passport.initialize());  
 app.use(passport.session());  
+```  
 
 ##### Validator:
-Search github for middleware of express-validator and copy paste  
+```bash
+//Express Validator (Download this middleware form github 'expressValidator middleware')
+app.use(expressValidator({
+  errorFormatter: function(param, msg, value) {
+      var namespace = param.split('.')
+      , root    = namespace.shift()
+      , formParam = root;
+
+    while(namespace.length) {
+      formParam += '[' + namespace.shift() + ']';
+    }
+    return {
+      param : formParam,
+      msg   : msg,
+      value : value
+    };
+  }
+}));
+```
+  
   
 ##### EXPRESS MESSAGES:  
-Search github for middleware of express-messages and copy paste
+```bash
+//Express messages (Download this middleware from github 'Express messages')
+app.use(require('connect-flash')());
+app.use(function (req, res, next) {
+  res.locals.messages = require('express-messages')(req, res);
+  next();
+});
+```
   
 
 ## Views and Layouts  
