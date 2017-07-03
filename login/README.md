@@ -388,7 +388,8 @@ var bcrypt = require(bcrypt)
 Now in model/users.js
 ```bash
 var bcrypt = require('bcryptjs');  
-
+```  
+```bash
 //Update createUser to the following with password hashing
 module.exports.createUser = function(newUser,callback){
 	bcrypt.genSalt(10, function(err, salt) {
