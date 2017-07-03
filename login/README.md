@@ -51,8 +51,26 @@ express-session
 passport     (http://passportjs.org/docs/authenticate) 
 passport-local  
 passport-http  
-multer   (helps in file upload)
+multer   (helps in file upload)  
 bcryptjs  
+
+### Requiring necessary modules
+```bash
+var session = require('express-session');
+var expressValidator = require('express-validator');
+var passport = require('passport');
+var LocalStrategy = require ('passport-local').Strategy;
+var multer = require('multer');
+var upload = multer({dest:'./uploads'}); 
+
+var flash = require('connect-flash');
+var bcrypt = require('bcryptjs');
+
+var mongo = require('mongodb');
+var mongoose = require('mongoose');
+var db = mongoose.connection;
+```  
+  
 
 ### Middleware setup
 
