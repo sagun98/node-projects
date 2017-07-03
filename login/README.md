@@ -48,7 +48,7 @@ connect-flash
 express-messages  
 express-validator  
 express-session  
-passport     (http://passportjs.org/docs/authenticate) 
+passport     (http://passportjs.org/docs/authenticate)   
 passport-local  
 passport-http  
 multer   (helps in file upload)  
@@ -222,7 +222,7 @@ If there are no errors then need to spit out the flash message
   
   
 ## MODELS AND USER REGISTRATION:  
-Create a folder model/users.js
+Create a folder models/users.js
 ```bash
 var mongoose = require ('mongoose');
 mongoose.connect('mongodb://localhost/___dbname(nodeauth)___');
@@ -254,7 +254,7 @@ module.exports.createUser = function(newUser,callback){
 ```  
 Then require this user model in routes(routes/users.js) as:  
 ```bash
-	var User = require("../models/user");
+	var User = require("../model/users");
 ```  
   
 Below in the same file:
@@ -387,6 +387,8 @@ var bcrypt = require(bcrypt)
 
 Now in model/users.js
 ```bash
+var bcrypt = require('bcryptjs');  
+
 //Update createUser to the following with password hashing
 module.exports.createUser = function(newUser,callback){
 	bcrypt.genSalt(10, function(err, salt) {
