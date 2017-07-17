@@ -8,3 +8,5 @@ NODE PROJECTS
      Create log folder
      
 #### passport and bcrypt for auth
+
+Conflict
